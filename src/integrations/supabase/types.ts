@@ -16,7 +16,6 @@ export type Database = {
           distance: string | null
           id: number
           image_url: string
-          is_open: boolean | null
           name: string
           opening_hours: string
           rating: number
@@ -28,7 +27,6 @@ export type Database = {
           distance?: string | null
           id?: number
           image_url: string
-          is_open?: boolean | null
           name: string
           opening_hours?: string
           rating: number
@@ -40,7 +38,6 @@ export type Database = {
           distance?: string | null
           id?: number
           image_url?: string
-          is_open?: boolean | null
           name?: string
           opening_hours?: string
           rating?: number
