@@ -1,7 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import LaundryMap from '../components/LaundryMap';
 import LaundryCard from '../components/LaundryCard';
-import SearchBar from '../components/SearchBar';
+import { Checkbox } from '../components/ui/checkbox';
+import { Label } from '../components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+
+interface Filters {
+  hasWifi: boolean;
+  hasParking: boolean;
+  hasFoldingTables: boolean;
+  priceRange: string;
+}
 
 const mockLaundromats = [
   {
@@ -34,6 +43,13 @@ const mockLaundromats = [
 ];
 
 const Index = () => {
+  const [filters, setFilters] = useState<Filters>({
+    hasWifi: false,
+    hasParking: false,
+    hasFoldingTables: false,
+    priceRange: 'all'
+  });
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-6">
       <div className="max-w-7xl mx-auto">
@@ -44,7 +60,62 @@ const Index = () => {
           </p>
         </header>
 
-        <SearchBar />
+        <div className="glass-card p-6 mb-8 rounded-lg animate-fade-in">
+          <h2 className="text-xl font-semibold mb-4">Filters</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="wifi" 
+                  checked={filters.hasWifi}
+                  onCheckedChange={(checked) => 
+                    setFilters(prev => ({ ...prev, hasWifi: checked as boolean }))
+                  }
+                />
+                <Label htmlFor="wifi">WiFi Available</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="parking" 
+                  checked={filters.hasParking}
+                  onCheckedChange={(checked) => 
+                    setFilters(prev => ({ ...prev, hasParking: checked as boolean }))
+                  }
+                />
+                <Label htmlFor="parking">Parking Available</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="foldingTables" 
+                  checked={filters.hasFoldingTables}
+                  onCheckedChange={(checked) => 
+                    setFilters(prev => ({ ...prev, hasFoldingTables: checked as boolean }))
+                  }
+                />
+                <Label htmlFor="foldingTables">Folding Tables</Label>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="priceRange">Price Range</Label>
+              <Select 
+                value={filters.priceRange}
+                onValueChange={(value) => 
+                  setFilters(prev => ({ ...prev, priceRange: value }))
+                }
+              >
+                <SelectTrigger id="priceRange">
+                  <SelectValue placeholder="Select price range" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Prices</SelectItem>
+                  <SelectItem value="low">$ Economy</SelectItem>
+                  <SelectItem value="medium">$$ Standard</SelectItem>
+                  <SelectItem value="high">$$$ Premium</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           <LaundryMap />
