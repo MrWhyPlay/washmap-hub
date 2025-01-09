@@ -104,7 +104,7 @@ const Index = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          <LaundryMap />
+          <LaundryMap laundromats={laundromats || []} />
           <div className="space-y-6">
             {isLoading ? (
               <div className="text-center py-8">Chargement des laveries...</div>
