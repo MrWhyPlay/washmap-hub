@@ -1,7 +1,9 @@
 import React from 'react';
 import { Star, Clock, MapPin } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface LaundryCardProps {
+  id: number;
   name: string;
   address: string;
   rating: number;
@@ -10,7 +12,9 @@ interface LaundryCardProps {
   imageUrl: string;
 }
 
-const LaundryCard = ({ name, address, rating, distance, isOpen, imageUrl }: LaundryCardProps) => {
+const LaundryCard = ({ id, name, address, rating, distance, isOpen, imageUrl }: LaundryCardProps) => {
+  const navigate = useNavigate();
+
   return (
     <div className="glass-card rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl animate-fade-in">
       <div className="relative h-48 overflow-hidden">
@@ -44,7 +48,10 @@ const LaundryCard = ({ name, address, rating, distance, isOpen, imageUrl }: Laun
               {isOpen ? 'Open Now' : 'Closed'}
             </span>
           </div>
-          <button className="px-4 py-2 bg-black text-white rounded-full text-sm hover:bg-gray-800 transition-colors">
+          <button 
+            className="px-4 py-2 bg-black text-white rounded-full text-sm hover:bg-gray-800 transition-colors"
+            onClick={() => navigate(`/laundry/${id}`)}
+          >
             View Details
           </button>
         </div>
