@@ -12,6 +12,7 @@ export type Database = {
       laundromats: {
         Row: {
           address: string
+          contactless_payment: boolean
           created_at: string
           distance: string | null
           id: number
@@ -25,6 +26,7 @@ export type Database = {
         }
         Insert: {
           address: string
+          contactless_payment?: boolean
           created_at?: string
           distance?: string | null
           id?: number
@@ -38,6 +40,7 @@ export type Database = {
         }
         Update: {
           address?: string
+          contactless_payment?: boolean
           created_at?: string
           distance?: string | null
           id?: number

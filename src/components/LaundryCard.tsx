@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, Clock, MapPin, Package, DollarSign } from 'lucide-react';
+import { Star, Clock, MapPin, Package, CreditCard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface LaundryCardProps {
@@ -10,8 +10,8 @@ interface LaundryCardProps {
   distance: string;
   image_url: string;
   opening_hours: string;
-  price_range: string;
   load_sizes: string[];
+  contactless_payment: boolean;
 }
 
 const LaundryCard = ({ 
@@ -22,8 +22,8 @@ const LaundryCard = ({
   distance, 
   image_url, 
   opening_hours,
-  price_range,
-  load_sizes 
+  load_sizes,
+  contactless_payment
 }: LaundryCardProps) => {
   const navigate = useNavigate();
 
@@ -62,12 +62,14 @@ const LaundryCard = ({
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center">
-              <DollarSign className="w-4 h-4 mr-1" />
-              <span className="text-sm text-gray-600">{price_range.replace('€', '€')}</span>
-            </div>
-            <div className="flex items-center">
               <Package className="w-4 h-4 mr-1" />
               <span className="text-sm text-gray-600">{load_sizes.join(', ')}</span>
+            </div>
+            <div className="flex items-center">
+              <CreditCard className="w-4 h-4 mr-1" />
+              <span className="text-sm text-gray-600">
+                {contactless_payment ? 'Sans contact' : 'Paiement classique'}
+              </span>
             </div>
             <button 
               className="px-4 py-2 bg-black text-white rounded-full text-sm hover:bg-gray-800 transition-colors"
