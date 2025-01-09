@@ -32,7 +32,7 @@ const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
   useEffect(() => {
     if (!mapRef.current) return;
 
-    // Paris coordinates as fallback center
+    // Paris coordinates as default center
     const parisCoordinates = fromLonLat([2.3522, 48.8566]);
 
     // Create vector source and layer for markers
@@ -48,7 +48,7 @@ const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
         image: new Circle({
           radius: 8,
           fill: new Fill({
-            color: '#4299e1', // Blue color
+            color: '#4299e1',
           }),
           stroke: new Stroke({
             color: '#fff',
@@ -58,6 +58,7 @@ const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
       }),
     });
 
+    // Initialize map with Paris as center
     mapInstance.current = new Map({
       target: mapRef.current,
       layers: [
@@ -73,7 +74,7 @@ const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
       })
     });
 
-    // Try to get user's location
+    // Try to get user's location, but don't show an error if denied
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -93,13 +94,9 @@ const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
             mapInstance.current.getView().setZoom(14);
           }
         },
-        (error) => {
-          console.error('Geolocation error:', error);
-          toast({
-            title: "Erreur de géolocalisation",
-            description: "Impossible d'obtenir votre position. Utilisation de la position par défaut.",
-            variant: "destructive",
-          });
+        () => {
+          // Silently fail if user denies geolocation
+          console.log('Geolocation denied or unavailable');
         }
       );
     }
