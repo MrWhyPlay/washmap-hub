@@ -165,7 +165,7 @@ const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
               image: new Icon({
                 anchor: [0.5, 1],
                 src: '/lovable-uploads/6d5cd576-9d23-4765-989a-6a4c8559dda0.png',
-                scale: 0.5,
+                scale: 0.15,
               })
             });
 
