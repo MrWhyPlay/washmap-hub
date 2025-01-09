@@ -129,7 +129,7 @@ const Index = () => {
                   key={laundromat.id}
                   ref={el => laundromatRefs.current[laundromat.id] = el}
                   className={`transition-colors duration-300 ${
-                    selectedLaundromat === laundromat.id ? 'bg-[#0EA5E9]/70 rounded-lg' : ''
+                    selectedLaundromat === laundromat.id ? 'border-2 border-[#0EA5E9] rounded-lg' : ''
                   }`}
                 >
                   <LaundryCard {...laundromat} />
