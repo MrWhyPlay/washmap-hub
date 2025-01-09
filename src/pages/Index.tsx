@@ -73,9 +73,9 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-6">
       <div className="max-w-7xl mx-auto">
         <header className="text-center mb-12 animate-fade-in">
-          <h1 className="text-4xl font-bold mb-4">Trouvez une laverie près de chez vous</h1>
+          <h1 className="text-4xl font-bold mb-4">Lavomate</h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Découvrez des laveries pratiques et fiables dans votre quartier. Comparez les équipements, vérifiez la disponibilité et trouvez l'endroit parfait pour votre linge.
+            Découvrez des laveries pratiques et fiables dans votre quartier. Comparez les équipements et trouvez l'endroit parfait pour votre linge.
           </p>
         </header>
 
