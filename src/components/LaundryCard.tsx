@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, Clock, MapPin, Package, CreditCard } from 'lucide-react';
+import { Clock, MapPin, Package, CreditCard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface LaundryCardProps {
@@ -18,7 +18,6 @@ const LaundryCard = ({
   id, 
   name, 
   address, 
-  rating, 
   distance, 
   image_url, 
   opening_hours,
@@ -44,10 +43,6 @@ const LaundryCard = ({
       <div className="p-6">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-lg font-semibold">{name}</h3>
-          <div className="flex items-center">
-            <Star className="w-4 h-4 text-yellow-400 mr-1" />
-            <span className="text-sm">{rating}</span>
-          </div>
         </div>
         <div className="flex items-center text-sm text-gray-600 mb-3">
           <MapPin className="w-4 h-4 mr-1" />

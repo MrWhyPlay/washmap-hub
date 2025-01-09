@@ -54,13 +54,34 @@ const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
       })
     });
 
+    // Try to get user's location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userCoordinates = fromLonLat([position.coords.longitude, position.coords.latitude]);
+          if (mapInstance.current) {
+            mapInstance.current.getView().setCenter(userCoordinates);
+            mapInstance.current.getView().setZoom(14);
+          }
+        },
+        (error) => {
+          console.error('Geolocation error:', error);
+          toast({
+            title: "Erreur de géolocalisation",
+            description: "Impossible d'obtenir votre position. Utilisation de la position par défaut.",
+            variant: "destructive",
+          });
+        }
+      );
+    }
+
     // Add click handler to the map with increased hitbox tolerance
     mapInstance.current.on('click', (event) => {
       const feature = mapInstance.current?.forEachFeatureAtPixel(
         event.pixel,
         (feature) => feature,
         {
-          hitTolerance: 25 // Increase hit tolerance to match the larger icon size
+          hitTolerance: 25
         }
       );
       if (feature) {
@@ -120,7 +141,7 @@ const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
                     <circle cx="12" cy="10" r="3"/>
                   </svg>
                 `),
-                scale: 2.5, // Increased scale for larger clickable area
+                scale: 2.5,
                 color: '#000000'
               })
             });
