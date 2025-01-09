@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import LaundryMap from '../components/LaundryMap';
 import LaundryCard from '../components/LaundryCard';
@@ -14,6 +14,8 @@ interface Filters {
 
 const Index = () => {
   const { toast } = useToast();
+  const [selectedLaundromat, setSelectedLaundromat] = useState<number | null>(null);
+  const laundromatRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const [filters, setFilters] = useState<Filters>({
     hasContactlessPayment: false,
     loadSizes: []
@@ -57,6 +59,14 @@ const Index = () => {
         ? prev.loadSizes.filter(s => s !== size)
         : [...prev.loadSizes, size]
     }));
+  };
+
+  const handleMarkerClick = (id: number) => {
+    setSelectedLaundromat(id);
+    const element = laundromatRefs.current[id];
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   };
 
   return (
@@ -104,7 +114,10 @@ const Index = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          <LaundryMap laundromats={laundromats || []} />
+          <LaundryMap 
+            laundromats={laundromats || []} 
+            onMarkerClick={handleMarkerClick}
+          />
           <div className="space-y-6">
             {isLoading ? (
               <div className="text-center py-8">Chargement des laveries...</div>
@@ -112,7 +125,15 @@ const Index = () => {
               <div className="text-center py-8 text-red-500">Erreur lors du chargement des laveries</div>
             ) : laundromats && laundromats.length > 0 ? (
               laundromats.map((laundromat) => (
-                <LaundryCard key={laundromat.id} {...laundromat} />
+                <div
+                  key={laundromat.id}
+                  ref={el => laundromatRefs.current[laundromat.id] = el}
+                  className={`transition-colors duration-300 ${
+                    selectedLaundromat === laundromat.id ? 'bg-blue-50 rounded-lg' : ''
+                  }`}
+                >
+                  <LaundryCard {...laundromat} />
+                </div>
               ))
             ) : (
               <div className="text-center py-8">Aucune laverie trouvée</div>
