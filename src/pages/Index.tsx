@@ -6,10 +6,9 @@ import { Label } from '../components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 
 interface Filters {
-  hasWifi: boolean;
-  hasParking: boolean;
-  hasFoldingTables: boolean;
+  hasContactlessPayment: boolean;
   priceRange: string;
+  loadSizes: string[];
 }
 
 const mockLaundromats = [
@@ -44,11 +43,19 @@ const mockLaundromats = [
 
 const Index = () => {
   const [filters, setFilters] = useState<Filters>({
-    hasWifi: false,
-    hasParking: false,
-    hasFoldingTables: false,
-    priceRange: 'all'
+    hasContactlessPayment: false,
+    priceRange: 'all',
+    loadSizes: []
   });
+
+  const handleLoadSizeChange = (size: string) => {
+    setFilters(prev => ({
+      ...prev,
+      loadSizes: prev.loadSizes.includes(size)
+        ? prev.loadSizes.filter(s => s !== size)
+        : [...prev.loadSizes, size]
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-6">
@@ -62,39 +69,20 @@ const Index = () => {
 
         <div className="glass-card p-6 mb-8 rounded-lg animate-fade-in">
           <h2 className="text-xl font-semibold mb-4">Filters</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
                 <Checkbox 
-                  id="wifi" 
-                  checked={filters.hasWifi}
+                  id="contactless" 
+                  checked={filters.hasContactlessPayment}
                   onCheckedChange={(checked) => 
-                    setFilters(prev => ({ ...prev, hasWifi: checked as boolean }))
+                    setFilters(prev => ({ ...prev, hasContactlessPayment: checked as boolean }))
                   }
                 />
-                <Label htmlFor="wifi">WiFi Available</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="parking" 
-                  checked={filters.hasParking}
-                  onCheckedChange={(checked) => 
-                    setFilters(prev => ({ ...prev, hasParking: checked as boolean }))
-                  }
-                />
-                <Label htmlFor="parking">Parking Available</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="foldingTables" 
-                  checked={filters.hasFoldingTables}
-                  onCheckedChange={(checked) => 
-                    setFilters(prev => ({ ...prev, hasFoldingTables: checked as boolean }))
-                  }
-                />
-                <Label htmlFor="foldingTables">Folding Tables</Label>
+                <Label htmlFor="contactless">Contactless Payment</Label>
               </div>
             </div>
+
             <div className="space-y-2">
               <Label htmlFor="priceRange">Price Range</Label>
               <Select 
@@ -108,11 +96,27 @@ const Index = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Prices</SelectItem>
-                  <SelectItem value="low">$ Economy</SelectItem>
-                  <SelectItem value="medium">$$ Standard</SelectItem>
-                  <SelectItem value="high">$$$ Premium</SelectItem>
+                  <SelectItem value="low">$ Economy (Under $2/load)</SelectItem>
+                  <SelectItem value="medium">$$ Standard ($2-4/load)</SelectItem>
+                  <SelectItem value="high">$$$ Premium ($4+/load)</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Load Sizes</Label>
+              <div className="grid grid-cols-2 gap-2">
+                {['S', 'M', 'L', 'XL'].map((size) => (
+                  <div key={size} className="flex items-center space-x-2">
+                    <Checkbox 
+                      id={`size-${size}`}
+                      checked={filters.loadSizes.includes(size)}
+                      onCheckedChange={() => handleLoadSizeChange(size)}
+                    />
+                    <Label htmlFor={`size-${size}`}>{size}</Label>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
