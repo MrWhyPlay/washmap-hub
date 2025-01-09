@@ -4,6 +4,7 @@ import LaundryMap from '../components/LaundryMap';
 import LaundryCard from '../components/LaundryCard';
 import { Checkbox } from '../components/ui/checkbox';
 import { Label } from '../components/ui/label';
+import { Button } from '../components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -145,6 +146,16 @@ const Index = () => {
               <div className="text-center py-8">Aucune laverie trouvée</div>
             )}
           </div>
+        </div>
+
+        <div className="text-center mb-12">
+          <Button 
+            variant="outline"
+            className="bg-white hover:bg-gray-50"
+            onClick={() => window.open('https://forms.gle/vY4GcoT7XyM32rQ76', '_blank')}
+          >
+            Rajouter une laverie manquante
+          </Button>
         </div>
       </div>
     </div>
