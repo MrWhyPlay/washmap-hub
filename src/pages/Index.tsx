@@ -10,7 +10,6 @@ import { useToast } from '@/components/ui/use-toast';
 interface Filters {
   hasContactlessPayment: boolean;
   loadSizes: string[];
-  selectedLaundromatId?: number;
 }
 
 const Index = () => {
@@ -36,10 +35,6 @@ const Index = () => {
         query = query.contains('load_sizes', filters.loadSizes);
       }
 
-      if (filters.selectedLaundromatId) {
-        query = query.eq('id', filters.selectedLaundromatId);
-      }
-
       const { data, error } = await query;
 
       if (error) {
@@ -61,13 +56,6 @@ const Index = () => {
       loadSizes: prev.loadSizes.includes(size)
         ? prev.loadSizes.filter(s => s !== size)
         : [...prev.loadSizes, size]
-    }));
-  };
-
-  const handleMarkerClick = (laundromatId: number) => {
-    setFilters(prev => ({
-      ...prev,
-      selectedLaundromatId: prev.selectedLaundromatId === laundromatId ? undefined : laundromatId
     }));
   };
 
@@ -116,10 +104,7 @@ const Index = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          <LaundryMap 
-            laundromats={laundromats || []} 
-            onMarkerClick={handleMarkerClick}
-          />
+          <LaundryMap laundromats={laundromats || []} />
           <div className="space-y-6">
             {isLoading ? (
               <div className="text-center py-8">Chargement des laveries...</div>

@@ -19,10 +19,9 @@ interface LaundryMapProps {
     name: string;
     address: string;
   }>;
-  onMarkerClick?: (laundromatId: number) => void;
 }
 
-const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
+const LaundryMap = ({ laundromats }: LaundryMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<Map | null>(null);
   const { toast } = useToast();
@@ -52,17 +51,6 @@ const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
         center: parisCoordinates,
         zoom: 12
       })
-    });
-
-    // Add click handler to the map
-    mapInstance.current.on('click', (event) => {
-      const feature = mapInstance.current?.forEachFeatureAtPixel(event.pixel, (feature) => feature);
-      if (feature) {
-        const laundromatId = feature.get('laundromatId');
-        if (laundromatId && onMarkerClick) {
-          onMarkerClick(laundromatId);
-        }
-      }
     });
 
     const geocodeAddress = async (address: string) => {
@@ -102,7 +90,6 @@ const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
               geometry: new Point(markerCoordinates),
               name: laundromat.name,
               address: laundromat.address,
-              laundromatId: laundromat.id
             });
 
             const markerStyle = new Style({
@@ -150,7 +137,7 @@ const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
         mapInstance.current.setTarget(undefined);
       }
     };
-  }, [laundromats, toast, onMarkerClick]);
+  }, [laundromats, toast]);
 
   return (
     <div className="relative w-full h-[60vh] rounded-lg overflow-hidden glass-card animate-fade-in">
