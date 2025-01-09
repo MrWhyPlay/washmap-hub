@@ -10,9 +10,10 @@ interface LaundryCardProps {
   distance: string;
   is_open: boolean;
   image_url: string;
+  opening_hours: string;
 }
 
-const LaundryCard = ({ id, name, address, rating, distance, is_open, image_url }: LaundryCardProps) => {
+const LaundryCard = ({ id, name, address, rating, distance, is_open, image_url, opening_hours }: LaundryCardProps) => {
   const navigate = useNavigate();
 
   return (
@@ -44,8 +45,8 @@ const LaundryCard = ({ id, name, address, rating, distance, is_open, image_url }
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Clock className="w-4 h-4 mr-1" />
-            <span className={`text-sm ${is_open ? 'text-green-600' : 'text-red-600'}`}>
-              {is_open ? 'Open Now' : 'Closed'}
+            <span className="text-sm text-gray-600">
+              {opening_hours}
             </span>
           </div>
           <button 

@@ -18,6 +18,7 @@ export type Database = {
           image_url: string
           is_open: boolean | null
           name: string
+          opening_hours: string
           rating: number
           updated_at: string
         }
@@ -29,6 +30,7 @@ export type Database = {
           image_url: string
           is_open?: boolean | null
           name: string
+          opening_hours?: string
           rating: number
           updated_at?: string
         }
@@ -40,6 +42,7 @@ export type Database = {
           image_url?: string
           is_open?: boolean | null
           name?: string
+          opening_hours?: string
           rating?: number
           updated_at?: string
         }
