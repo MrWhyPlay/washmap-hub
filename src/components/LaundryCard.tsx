@@ -8,18 +8,18 @@ interface LaundryCardProps {
   address: string;
   rating: number;
   distance: string;
-  isOpen: boolean;
-  imageUrl: string;
+  is_open: boolean;
+  image_url: string;
 }
 
-const LaundryCard = ({ id, name, address, rating, distance, isOpen, imageUrl }: LaundryCardProps) => {
+const LaundryCard = ({ id, name, address, rating, distance, is_open, image_url }: LaundryCardProps) => {
   const navigate = useNavigate();
 
   return (
     <div className="glass-card rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl animate-fade-in">
       <div className="relative h-48 overflow-hidden">
         <img 
-          src={imageUrl} 
+          src={image_url} 
           alt={name}
           className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
         />
@@ -44,8 +44,8 @@ const LaundryCard = ({ id, name, address, rating, distance, isOpen, imageUrl }: 
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Clock className="w-4 h-4 mr-1" />
-            <span className={`text-sm ${isOpen ? 'text-green-600' : 'text-red-600'}`}>
-              {isOpen ? 'Open Now' : 'Closed'}
+            <span className={`text-sm ${is_open ? 'text-green-600' : 'text-red-600'}`}>
+              {is_open ? 'Open Now' : 'Closed'}
             </span>
           </div>
           <button 
