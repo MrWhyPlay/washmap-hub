@@ -73,7 +73,13 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-6">
       <div className="max-w-7xl mx-auto">
         <header className="text-center mb-12 animate-fade-in">
-          <h1 className="text-4xl font-bold mb-4">Lavomate</h1>
+          <div className="mb-4">
+            <img 
+              src="/lovable-uploads/71d04a19-2e97-40c1-b754-835fe624de35.png" 
+              alt="Lavomate" 
+              className="h-16 mx-auto"
+            />
+          </div>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Découvrez des laveries pratiques et fiables dans votre quartier. Comparez les équipements et trouvez l'endroit parfait pour votre linge.
           </p>
