@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, Clock, MapPin } from 'lucide-react';
+import { Star, Clock, MapPin, Package, DollarSign } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface LaundryCardProps {
@@ -8,12 +8,23 @@ interface LaundryCardProps {
   address: string;
   rating: number;
   distance: string;
-  is_open: boolean;
   image_url: string;
   opening_hours: string;
+  price_range: string;
+  load_sizes: string[];
 }
 
-const LaundryCard = ({ id, name, address, rating, distance, is_open, image_url, opening_hours }: LaundryCardProps) => {
+const LaundryCard = ({ 
+  id, 
+  name, 
+  address, 
+  rating, 
+  distance, 
+  image_url, 
+  opening_hours,
+  price_range,
+  load_sizes 
+}: LaundryCardProps) => {
   const navigate = useNavigate();
 
   return (
@@ -49,12 +60,22 @@ const LaundryCard = ({ id, name, address, rating, distance, is_open, image_url, 
               {opening_hours}
             </span>
           </div>
-          <button 
-            className="px-4 py-2 bg-black text-white rounded-full text-sm hover:bg-gray-800 transition-colors"
-            onClick={() => navigate(`/laundry/${id}`)}
-          >
-            View Details
-          </button>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center">
+              <DollarSign className="w-4 h-4 mr-1" />
+              <span className="text-sm text-gray-600">{price_range}</span>
+            </div>
+            <div className="flex items-center">
+              <Package className="w-4 h-4 mr-1" />
+              <span className="text-sm text-gray-600">{load_sizes.join(', ')}</span>
+            </div>
+            <button 
+              className="px-4 py-2 bg-black text-white rounded-full text-sm hover:bg-gray-800 transition-colors"
+              onClick={() => navigate(`/laundry/${id}`)}
+            >
+              View Details
+            </button>
+          </div>
         </div>
       </div>
     </div>

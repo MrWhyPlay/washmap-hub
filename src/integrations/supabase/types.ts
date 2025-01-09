@@ -16,8 +16,10 @@ export type Database = {
           distance: string | null
           id: number
           image_url: string
+          load_sizes: string[]
           name: string
           opening_hours: string
+          price_range: string
           rating: number
           updated_at: string
         }
@@ -27,8 +29,10 @@ export type Database = {
           distance?: string | null
           id?: number
           image_url: string
+          load_sizes?: string[]
           name: string
           opening_hours?: string
+          price_range?: string
           rating: number
           updated_at?: string
         }
@@ -38,8 +42,10 @@ export type Database = {
           distance?: string | null
           id?: number
           image_url?: string
+          load_sizes?: string[]
           name?: string
           opening_hours?: string
+          price_range?: string
           rating?: number
           updated_at?: string
         }
