@@ -23,16 +23,31 @@ const Index = () => {
   });
 
   const { data: laundromats, isLoading, error } = useQuery({
-    queryKey: ['laundromats'],
+    queryKey: ['laundromats', filters],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from('laundromats')
         .select('*')
         .order('created_at', { ascending: false });
 
+      if (filters.priceRange !== 'all') {
+        const priceRanges = {
+          'low': '1,5€-3€/charge',
+          'medium': '2€-4€/charge',
+          'high': '4€+/charge'
+        };
+        query = query.eq('price_range', priceRanges[filters.priceRange as keyof typeof priceRanges]);
+      }
+
+      if (filters.loadSizes.length > 0) {
+        query = query.contains('load_sizes', filters.loadSizes);
+      }
+
+      const { data, error } = await query;
+
       if (error) {
         toast({
-          title: "Error fetching laundromats",
+          title: "Erreur lors de la récupération des laveries",
           description: error.message,
           variant: "destructive",
         });
@@ -56,14 +71,14 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-6">
       <div className="max-w-7xl mx-auto">
         <header className="text-center mb-12 animate-fade-in">
-          <h1 className="text-4xl font-bold mb-4">Find a Laundromat Near You</h1>
+          <h1 className="text-4xl font-bold mb-4">Trouvez une laverie près de chez vous</h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Discover convenient and reliable laundromats in your area. Compare prices, check availability, and find the perfect spot for your laundry needs.
+            Découvrez des laveries pratiques et fiables dans votre quartier. Comparez les prix, vérifiez la disponibilité et trouvez l'endroit parfait pour votre linge.
           </p>
         </header>
 
         <div className="glass-card p-6 mb-8 rounded-lg animate-fade-in">
-          <h2 className="text-xl font-semibold mb-4">Filters</h2>
+          <h2 className="text-xl font-semibold mb-4">Filtres</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
@@ -74,12 +89,12 @@ const Index = () => {
                     setFilters(prev => ({ ...prev, hasContactlessPayment: checked as boolean }))
                   }
                 />
-                <Label htmlFor="contactless">Contactless Payment</Label>
+                <Label htmlFor="contactless">Paiement sans contact</Label>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="priceRange">Price Range</Label>
+              <Label htmlFor="priceRange">Gamme de prix</Label>
               <Select 
                 value={filters.priceRange}
                 onValueChange={(value) => 
@@ -87,19 +102,19 @@ const Index = () => {
                 }
               >
                 <SelectTrigger id="priceRange">
-                  <SelectValue placeholder="Select price range" />
+                  <SelectValue placeholder="Sélectionnez la gamme de prix" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Prices</SelectItem>
-                  <SelectItem value="low">$ Economy (Under $2/load)</SelectItem>
-                  <SelectItem value="medium">$$ Standard ($2-4/load)</SelectItem>
-                  <SelectItem value="high">$$$ Premium ($4+/load)</SelectItem>
+                  <SelectItem value="all">Tous les prix</SelectItem>
+                  <SelectItem value="low">€ Économique (Moins de 3€/charge)</SelectItem>
+                  <SelectItem value="medium">€€ Standard (3€-4€/charge)</SelectItem>
+                  <SelectItem value="high">€€€ Premium (4€+/charge)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label>Load Sizes</Label>
+              <Label>Tailles de charge</Label>
               <div className="grid grid-cols-2 gap-2">
                 {['S', 'M', 'L', 'XL'].map((size) => (
                   <div key={size} className="flex items-center space-x-2">
@@ -120,15 +135,15 @@ const Index = () => {
           <LaundryMap />
           <div className="space-y-6">
             {isLoading ? (
-              <div className="text-center py-8">Loading laundromats...</div>
+              <div className="text-center py-8">Chargement des laveries...</div>
             ) : error ? (
-              <div className="text-center py-8 text-red-500">Error loading laundromats</div>
+              <div className="text-center py-8 text-red-500">Erreur lors du chargement des laveries</div>
             ) : laundromats && laundromats.length > 0 ? (
               laundromats.map((laundromat) => (
                 <LaundryCard key={laundromat.id} {...laundromat} />
               ))
             ) : (
-              <div className="text-center py-8">No laundromats found</div>
+              <div className="text-center py-8">Aucune laverie trouvée</div>
             )}
           </div>
         </div>

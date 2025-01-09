@@ -9,7 +9,7 @@ const SearchBar = () => {
           <Search className="w-5 h-5 text-gray-400" />
           <input
             type="text"
-            placeholder="Search for laundromats nearby..."
+            placeholder="Rechercher des laveries à proximité..."
             className="w-full ml-3 bg-transparent border-none focus:outline-none placeholder-gray-400"
           />
         </div>

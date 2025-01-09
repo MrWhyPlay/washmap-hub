@@ -63,7 +63,7 @@ const LaundryCard = ({
           <div className="flex items-center gap-4">
             <div className="flex items-center">
               <DollarSign className="w-4 h-4 mr-1" />
-              <span className="text-sm text-gray-600">{price_range}</span>
+              <span className="text-sm text-gray-600">{price_range.replace('€', '€')}</span>
             </div>
             <div className="flex items-center">
               <Package className="w-4 h-4 mr-1" />
@@ -73,7 +73,7 @@ const LaundryCard = ({
               className="px-4 py-2 bg-black text-white rounded-full text-sm hover:bg-gray-800 transition-colors"
               onClick={() => navigate(`/laundry/${id}`)}
             >
-              View Details
+              Voir les détails
             </button>
           </div>
         </div>
