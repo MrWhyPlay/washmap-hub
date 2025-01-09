@@ -9,7 +9,7 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
-import { Style, Icon } from 'ol/style';
+import { Style, Icon, Circle, Fill, Stroke } from 'ol/style';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -27,6 +27,7 @@ const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
   const mapInstance = useRef<Map | null>(null);
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
+  const userLocationSource = useRef(new VectorSource());
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -40,12 +41,30 @@ const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
       source: vectorSource,
     });
 
+    // Create user location layer
+    const userLocationLayer = new VectorLayer({
+      source: userLocationSource.current,
+      style: new Style({
+        image: new Circle({
+          radius: 8,
+          fill: new Fill({
+            color: '#4299e1', // Blue color
+          }),
+          stroke: new Stroke({
+            color: '#fff',
+            width: 2,
+          }),
+        }),
+      }),
+    });
+
     mapInstance.current = new Map({
       target: mapRef.current,
       layers: [
         new TileLayer({
           source: new OSM()
         }),
+        userLocationLayer,
         vectorLayer
       ],
       view: new View({
@@ -59,6 +78,16 @@ const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const userCoordinates = fromLonLat([position.coords.longitude, position.coords.latitude]);
+          
+          // Add user location marker
+          const userLocationFeature = new Feature({
+            geometry: new Point(userCoordinates),
+            name: 'Your location'
+          });
+          
+          userLocationSource.current.clear();
+          userLocationSource.current.addFeature(userLocationFeature);
+
           if (mapInstance.current) {
             mapInstance.current.getView().setCenter(userCoordinates);
             mapInstance.current.getView().setZoom(14);
