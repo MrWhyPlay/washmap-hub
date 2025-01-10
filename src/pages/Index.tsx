@@ -8,6 +8,8 @@ import { Button } from '../components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { RotateCcw } from 'lucide-react';
+import { calculateDistance, formatDistance } from '@/utils/distance';
+import { geocodeAddress } from '@/utils/geocoding';
 
 interface Filters {
   hasContactlessPayment: boolean;
@@ -18,6 +20,7 @@ const Index = () => {
   const { toast } = useToast();
   const [selectedLaundromat, setSelectedLaundromat] = useState<number | null>(null);
   const laundromatRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
+  const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | null>(null);
   const [filters, setFilters] = useState<Filters>({
     hasContactlessPayment: false,
     loadSizes: []
@@ -39,7 +42,7 @@ const Index = () => {
         query = query.contains('load_sizes', filters.loadSizes);
       }
 
-      const { data, error } = await query;
+      const { data: laundromatData, error } = await query;
 
       if (error) {
         toast({
@@ -50,7 +53,40 @@ const Index = () => {
         throw error;
       }
 
-      return data;
+      // Calculate distances if user location is available
+      if (userLocation && laundromatData) {
+        const laundromatWithDistances = await Promise.all(
+          laundromatData.map(async (laundromat) => {
+            try {
+              const coords = await geocodeAddress(laundromat.address);
+              if (coords) {
+                const distance = calculateDistance(
+                  userLocation.lat,
+                  userLocation.lon,
+                  coords.lat,
+                  coords.lon
+                );
+                return {
+                  ...laundromat,
+                  distance: formatDistance(distance)
+                };
+              }
+            } catch (error) {
+              console.error('Error calculating distance:', error);
+            }
+            return {
+              ...laundromat,
+              distance: ''
+            };
+          })
+        );
+        return laundromatWithDistances;
+      }
+
+      return laundromatData?.map(laundromat => ({
+        ...laundromat,
+        distance: ''
+      })) || [];
     },
   });
 
@@ -69,6 +105,10 @@ const Index = () => {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+  };
+
+  const handleUserLocation = (coords: { lat: number; lon: number } | null) => {
+    setUserLocation(coords);
   };
 
   const handleReset = () => {
@@ -144,6 +184,7 @@ const Index = () => {
           <LaundryMap 
             laundromats={laundromats || []} 
             onMarkerClick={handleMarkerClick}
+            onUserLocation={handleUserLocation}
           />
           <div className="space-y-6">
             {isLoading ? (
