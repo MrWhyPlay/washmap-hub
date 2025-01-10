@@ -105,7 +105,7 @@ const Index = () => {
               className="flex items-center gap-2"
             >
               <RotateCcw className="w-4 h-4" />
-              Retour
+              Reset
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
