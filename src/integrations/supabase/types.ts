@@ -14,12 +14,16 @@ export type Database = {
           address: string
           contactless_payment: boolean
           created_at: string
+          detergent_price: number | null
           distance: string | null
           id: number
           load_sizes: string[]
           name: string
           opening_hours: string
-          price_range: string
+          price_l: number | null
+          price_m: number | null
+          price_s: number | null
+          price_xl: number | null
           rating: number
           updated_at: string
         }
@@ -27,12 +31,16 @@ export type Database = {
           address: string
           contactless_payment?: boolean
           created_at?: string
+          detergent_price?: number | null
           distance?: string | null
           id?: number
           load_sizes?: string[]
           name: string
           opening_hours?: string
-          price_range?: string
+          price_l?: number | null
+          price_m?: number | null
+          price_s?: number | null
+          price_xl?: number | null
           rating: number
           updated_at?: string
         }
@@ -40,12 +48,16 @@ export type Database = {
           address?: string
           contactless_payment?: boolean
           created_at?: string
+          detergent_price?: number | null
           distance?: string | null
           id?: number
           load_sizes?: string[]
           name?: string
           opening_hours?: string
-          price_range?: string
+          price_l?: number | null
+          price_m?: number | null
+          price_s?: number | null
+          price_xl?: number | null
           rating?: number
           updated_at?: string
         }
