@@ -7,6 +7,7 @@ import { Label } from '../components/ui/label';
 import { Button } from '../components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
+import { RotateCcw } from 'lucide-react';
 
 interface Filters {
   hasContactlessPayment: boolean;
@@ -70,6 +71,14 @@ const Index = () => {
     }
   };
 
+  const handleReset = () => {
+    setFilters({
+      hasContactlessPayment: false,
+      loadSizes: []
+    });
+    setSelectedLaundromat(null);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-6">
       <div className="max-w-7xl mx-auto">
@@ -87,7 +96,18 @@ const Index = () => {
         </header>
 
         <div className="glass-card p-6 mb-8 rounded-lg animate-fade-in">
-          <h2 className="text-xl font-semibold mb-4">Filtres</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Filtres</h2>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleReset}
+              className="flex items-center gap-2"
+            >
+              <RotateCcw className="w-4 h-4" />
+              Retour
+            </Button>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
