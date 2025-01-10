@@ -7,7 +7,6 @@ interface LaundryCardProps {
   name: string;
   address: string;
   rating: number;
-  distance: string;
   opening_hours: string;
   load_sizes: string[];
   contactless_payment: boolean;
@@ -21,8 +20,7 @@ interface LaundryCardProps {
 const LaundryCard = ({ 
   id, 
   name, 
-  address, 
-  distance, 
+  address,
   opening_hours,
   load_sizes,
   contactless_payment,
@@ -39,9 +37,6 @@ const LaundryCard = ({
       <div className="p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold">{name}</h3>
-          <div className="glass-card px-3 py-1 rounded-full text-sm">
-            {distance}
-          </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
