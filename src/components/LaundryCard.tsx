@@ -66,10 +66,10 @@ const LaundryCard = ({
           {/* Right column: Prices and Button */}
           <div className="flex flex-col justify-between">
             <div className="space-y-2 mb-4">
-              {price_s && <div className="text-sm">Petite charge (S): {price_s}€</div>}
-              {price_m && <div className="text-sm">Charge moyenne (M): {price_m}€</div>}
-              {price_l && <div className="text-sm">Grande charge (L): {price_l}€</div>}
-              {price_xl && <div className="text-sm">Très grande charge (XL): {price_xl}€</div>}
+              {price_s && <div className="text-sm">S: {price_s}€</div>}
+              {price_m && <div className="text-sm">M: {price_m}€</div>}
+              {price_l && <div className="text-sm">L: {price_l}€</div>}
+              {price_xl && <div className="text-sm">XL: {price_xl}€</div>}
               {detergent_price && (
                 <div className="text-sm text-gray-600 mt-1">
                   Lessive: {detergent_price}€
