@@ -5,13 +5,8 @@ import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import { fromLonLat } from 'ol/proj';
-import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
-import Feature from 'ol/Feature';
-import Point from 'ol/geom/Point';
-import { Style, Icon, Circle, Fill, Stroke } from 'ol/style';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/components/ui/use-toast';
+import UserLocationLayer from './map/UserLocationLayer';
+import LaundromatMarkers from './map/LaundromatMarkers';
 
 interface LaundryMapProps {
   laundromats: Array<{
@@ -25,48 +20,19 @@ interface LaundryMapProps {
 const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<Map | null>(null);
-  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
-  const userLocationSource = useRef(new VectorSource());
 
   useEffect(() => {
     if (!mapRef.current) return;
 
-    // Paris coordinates as default center
     const parisCoordinates = fromLonLat([2.3522, 48.8566]);
 
-    // Create vector source and layer for markers
-    const vectorSource = new VectorSource();
-    const vectorLayer = new VectorLayer({
-      source: vectorSource,
-    });
-
-    // Create user location layer
-    const userLocationLayer = new VectorLayer({
-      source: userLocationSource.current,
-      style: new Style({
-        image: new Circle({
-          radius: 8,
-          fill: new Fill({
-            color: '#4299e1',
-          }),
-          stroke: new Stroke({
-            color: '#fff',
-            width: 2,
-          }),
-        }),
-      }),
-    });
-
-    // Initialize map with Paris as center
     mapInstance.current = new Map({
       target: mapRef.current,
       layers: [
         new TileLayer({
           source: new OSM()
-        }),
-        userLocationLayer,
-        vectorLayer
+        })
       ],
       view: new View({
         center: parisCoordinates,
@@ -74,130 +40,29 @@ const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
       })
     });
 
-    // Try to get user's location, but don't show an error if denied
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userCoordinates = fromLonLat([position.coords.longitude, position.coords.latitude]);
-          
-          // Add user location marker
-          const userLocationFeature = new Feature({
-            geometry: new Point(userCoordinates),
-            name: 'Your location'
-          });
-          
-          userLocationSource.current.clear();
-          userLocationSource.current.addFeature(userLocationFeature);
-
-          if (mapInstance.current) {
-            mapInstance.current.getView().setCenter(userCoordinates);
-            mapInstance.current.getView().setZoom(14);
-          }
-        },
-        () => {
-          // Silently fail if user denies geolocation
-          console.log('Geolocation denied or unavailable');
-        }
-      );
-    }
-
-    // Add click handler to the map with increased hitbox tolerance
-    mapInstance.current.on('click', (event) => {
-      const feature = mapInstance.current?.forEachFeatureAtPixel(
-        event.pixel,
-        (feature) => feature,
-        {
-          hitTolerance: 25
-        }
-      );
-      if (feature) {
-        const laundromatId = feature.get('id');
-        if (laundromatId && onMarkerClick) {
-          onMarkerClick(laundromatId);
-        }
-      }
-    });
-
-    const geocodeAddress = async (address: string) => {
-      try {
-        const { data, error } = await supabase.functions.invoke('geocode', {
-          body: { address }
-        });
-
-        if (error) throw error;
-        return data;
-      } catch (error) {
-        console.error('Geocoding error:', error);
-        return null;
-      }
-    };
-
-    const addMarkers = async () => {
-      setIsLoading(true);
-      let bounds = [parisCoordinates[0], parisCoordinates[1], parisCoordinates[0], parisCoordinates[1]];
-      
-      for (const laundromat of laundromats) {
-        try {
-          const coords = await geocodeAddress(laundromat.address);
-          
-          if (coords) {
-            const markerCoordinates = fromLonLat([coords.lon, coords.lat]);
-            
-            // Update bounds
-            bounds = [
-              Math.min(bounds[0], markerCoordinates[0]),
-              Math.min(bounds[1], markerCoordinates[1]),
-              Math.max(bounds[2], markerCoordinates[0]),
-              Math.max(bounds[3], markerCoordinates[1])
-            ];
-
-            const marker = new Feature({
-              geometry: new Point(markerCoordinates),
-              name: laundromat.name,
-              address: laundromat.address,
-              id: laundromat.id
-            });
-
-            const markerStyle = new Style({
-              image: new Icon({
-                anchor: [0.5, 1],
-                src: '/lovable-uploads/6d5cd576-9d23-4765-989a-6a4c8559dda0.png',
-                scale: 0.15,
-              })
-            });
-
-            marker.setStyle(markerStyle);
-            vectorSource.addFeature(marker);
-          }
-        } catch (error) {
-          console.error('Error adding marker:', error);
-          toast({
-            title: "Erreur de géocodage",
-            description: `Impossible de localiser l'adresse: ${laundromat.address}`,
-            variant: "destructive",
-          });
-        }
-      }
-
-      // Fit view to all markers if we have any
-      if (vectorSource.getFeatures().length > 0) {
-        mapInstance.current?.getView().fit(bounds, {
-          padding: [50, 50, 50, 50],
-          duration: 1000
-        });
-      }
-      
-      setIsLoading(false);
-    };
-
-    addMarkers();
-
     return () => {
       if (mapInstance.current) {
         mapInstance.current.setTarget(undefined);
       }
     };
-  }, [laundromats, toast, onMarkerClick]);
+  }, []);
+
+  const handleUserLocation = (coordinates: number[]) => {
+    if (mapInstance.current) {
+      mapInstance.current.getView().setCenter(coordinates);
+      mapInstance.current.getView().setZoom(14);
+    }
+  };
+
+  const handleMarkersLoaded = (bounds: number[]) => {
+    if (mapInstance.current) {
+      mapInstance.current.getView().fit(bounds, {
+        padding: [50, 50, 50, 50],
+        duration: 1000
+      });
+    }
+    setIsLoading(false);
+  };
 
   return (
     <div className="relative w-full h-[60vh] rounded-lg overflow-hidden glass-card animate-fade-in">
@@ -207,6 +72,20 @@ const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
         </div>
       )}
       <div ref={mapRef} className="absolute inset-0" />
+      {mapInstance.current && (
+        <>
+          <UserLocationLayer 
+            map={mapInstance.current} 
+            onLocationFound={handleUserLocation} 
+          />
+          <LaundromatMarkers 
+            map={mapInstance.current}
+            laundromats={laundromats}
+            onMarkersLoaded={handleMarkersLoaded}
+            onMarkerClick={onMarkerClick}
+          />
+        </>
+      )}
     </div>
   );
 };
