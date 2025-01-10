@@ -63,18 +63,29 @@ const LaundryCard = ({
             </div>
           </div>
 
-          {/* Right column: Prices and Button */}
+          {/* Right column: Prices Table and Button */}
           <div className="flex flex-col justify-between">
-            <div className="space-y-2 mb-4">
-              {price_s && <div className="text-sm">S: {price_s}€</div>}
-              {price_m && <div className="text-sm">M: {price_m}€</div>}
-              {price_l && <div className="text-sm">L: {price_l}€</div>}
-              {price_xl && <div className="text-sm">XL: {price_xl}€</div>}
-              {detergent_price && (
-                <div className="text-sm text-gray-600 mt-1">
-                  Lessive: {detergent_price}€
-                </div>
-              )}
+            <div className="mb-4">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr>
+                    <th className="text-center py-1">S</th>
+                    <th className="text-center py-1">M</th>
+                    <th className="text-center py-1">L</th>
+                    <th className="text-center py-1">XL</th>
+                    <th className="text-center py-1">Lessive</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="text-center py-1">{price_s}€</td>
+                    <td className="text-center py-1">{price_m}€</td>
+                    <td className="text-center py-1">{price_l}€</td>
+                    <td className="text-center py-1">{price_xl}€</td>
+                    <td className="text-center py-1">{detergent_price}€</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
             
             <button 
