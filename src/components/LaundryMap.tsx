@@ -15,10 +15,9 @@ interface LaundryMapProps {
     address: string;
   }>;
   onMarkerClick?: (id: number) => void;
-  onUserLocation?: (coords: { lat: number; lon: number } | null) => void;
 }
 
-const LaundryMap = ({ laundromats, onMarkerClick, onUserLocation }: LaundryMapProps) => {
+const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<Map | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -52,17 +51,6 @@ const LaundryMap = ({ laundromats, onMarkerClick, onUserLocation }: LaundryMapPr
     if (mapInstance.current) {
       mapInstance.current.getView().setCenter(coordinates);
       mapInstance.current.getView().setZoom(14);
-      
-      if (onUserLocation) {
-        const [lon, lat] = coordinates;
-        onUserLocation({ lat, lon });
-      }
-    }
-  };
-
-  const handleLocationError = () => {
-    if (onUserLocation) {
-      onUserLocation(null);
     }
   };
 
@@ -88,8 +76,7 @@ const LaundryMap = ({ laundromats, onMarkerClick, onUserLocation }: LaundryMapPr
         <>
           <UserLocationLayer 
             map={mapInstance.current} 
-            onLocationFound={handleUserLocation}
-            onLocationError={handleLocationError}
+            onLocationFound={handleUserLocation} 
           />
           <LaundromatMarkers 
             map={mapInstance.current}

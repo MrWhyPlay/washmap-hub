@@ -10,10 +10,9 @@ import Map from 'ol/Map';
 interface UserLocationLayerProps {
   map: Map;
   onLocationFound?: (coordinates: number[]) => void;
-  onLocationError?: () => void;
 }
 
-const UserLocationLayer = ({ map, onLocationFound, onLocationError }: UserLocationLayerProps) => {
+const UserLocationLayer = ({ map, onLocationFound }: UserLocationLayerProps) => {
   const userLocationSource = useRef(new VectorSource());
 
   useEffect(() => {
@@ -54,9 +53,6 @@ const UserLocationLayer = ({ map, onLocationFound, onLocationError }: UserLocati
         },
         () => {
           console.log('Geolocation denied or unavailable');
-          if (onLocationError) {
-            onLocationError();
-          }
         }
       );
     }
@@ -64,7 +60,7 @@ const UserLocationLayer = ({ map, onLocationFound, onLocationError }: UserLocati
     return () => {
       map.removeLayer(userLocationLayer);
     };
-  }, [map, onLocationFound, onLocationError]);
+  }, [map, onLocationFound]);
 
   return null;
 };
