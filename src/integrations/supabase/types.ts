@@ -16,7 +16,6 @@ export type Database = {
           created_at: string
           distance: string | null
           id: number
-          image_url: string
           load_sizes: string[]
           name: string
           opening_hours: string
@@ -30,7 +29,6 @@ export type Database = {
           created_at?: string
           distance?: string | null
           id?: number
-          image_url: string
           load_sizes?: string[]
           name: string
           opening_hours?: string
@@ -44,7 +42,6 @@ export type Database = {
           created_at?: string
           distance?: string | null
           id?: number
-          image_url?: string
           load_sizes?: string[]
           name?: string
           opening_hours?: string
