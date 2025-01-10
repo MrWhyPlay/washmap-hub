@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
@@ -22,21 +22,16 @@ interface LaundromatMarkersProps {
 
 const LaundromatMarkers = ({ map, laundromats, onMarkersLoaded, onMarkerClick }: LaundromatMarkersProps) => {
   const { toast } = useToast();
-  const vectorLayerRef = useRef<VectorLayer<VectorSource>>();
-  const vectorSourceRef = useRef<VectorSource>();
 
   useEffect(() => {
-    // Create the vector source and layer only once
-    vectorSourceRef.current = new VectorSource();
-    vectorLayerRef.current = new VectorLayer({
-      source: vectorSourceRef.current,
+    const vectorSource = new VectorSource();
+    const vectorLayer = new VectorLayer({
+      source: vectorSource,
     });
 
-    map.addLayer(vectorLayerRef.current);
+    map.addLayer(vectorLayer);
 
     const addMarkers = async () => {
-      if (!vectorSourceRef.current) return;
-
       const parisCoordinates = fromLonLat([2.3522, 48.8566]);
       let bounds = [parisCoordinates[0], parisCoordinates[1], parisCoordinates[0], parisCoordinates[1]];
       
@@ -70,7 +65,7 @@ const LaundromatMarkers = ({ map, laundromats, onMarkersLoaded, onMarkerClick }:
             });
 
             marker.setStyle(markerStyle);
-            vectorSourceRef.current.addFeature(marker);
+            vectorSource.addFeature(marker);
           }
         } catch (error) {
           console.error('Error adding marker:', error);
@@ -82,7 +77,7 @@ const LaundromatMarkers = ({ map, laundromats, onMarkersLoaded, onMarkerClick }:
         }
       }
 
-      if (vectorSourceRef.current.getFeatures().length > 0 && onMarkersLoaded) {
+      if (vectorSource.getFeatures().length > 0 && onMarkersLoaded) {
         onMarkersLoaded(bounds);
       }
     };
@@ -90,7 +85,7 @@ const LaundromatMarkers = ({ map, laundromats, onMarkersLoaded, onMarkerClick }:
     addMarkers();
 
     if (onMarkerClick) {
-      const clickListener = (event: any) => {
+      map.on('click', (event) => {
         const feature = map.forEachFeatureAtPixel(
           event.pixel,
           (feature) => feature,
@@ -104,18 +99,11 @@ const LaundromatMarkers = ({ map, laundromats, onMarkersLoaded, onMarkerClick }:
             onMarkerClick(laundromatId);
           }
         }
-      };
-
-      map.on('click', clickListener);
-      return () => {
-        map.un('click', clickListener);
-      };
+      });
     }
 
     return () => {
-      if (vectorLayerRef.current) {
-        map.removeLayer(vectorLayerRef.current);
-      }
+      map.removeLayer(vectorLayer);
     };
   }, [map, laundromats, toast, onMarkersLoaded, onMarkerClick]);
 
