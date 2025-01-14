@@ -98,7 +98,7 @@ const Index = () => {
             <img 
               src="/lovable-uploads/71d04a19-2e97-40c1-b754-835fe624de35.png" 
               alt="Lavomate" 
-              className="w-1/2 max-w-xl mx-auto"
+              className="w-[30%] max-w-xl mx-auto"
             />
           </div>
           <p className="text-gray-600 max-w-2xl mx-auto mb-4">
