@@ -32,6 +32,15 @@ const LaundryList = ({
   onSelect,
   refs 
 }: LaundryListProps) => {
+  React.useEffect(() => {
+    if (selectedLaundromat && refs[selectedLaundromat]?.current) {
+      refs[selectedLaundromat].current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
+  }, [selectedLaundromat, refs]);
+
   return (
     <div className="h-[60vh] overflow-y-auto pr-4 space-y-6">
       {isLoading ? (
@@ -42,13 +51,9 @@ const LaundryList = ({
         laundromats.map((laundromat) => (
           <div
             key={laundromat.id}
-            ref={el => {
-              if (refs[laundromat.id]) {
-                (refs[laundromat.id] as any).current = el;
-              }
-            }}
+            ref={refs[laundromat.id]}
             className={`transition-colors duration-300 ${
-              selectedLaundromat === laundromat.id ? 'border-2 border-[#0EA5E9] rounded-lg' : ''
+              selectedLaundromat === laundromat.id ? 'border-2 border-[#0EA5E9] rounded-lg' : 'border border-gray-200 rounded-lg'
             }`}
           >
             <LaundryCard 
