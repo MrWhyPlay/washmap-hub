@@ -42,11 +42,7 @@ const LaundryList = ({
         laundromats.map((laundromat) => (
           <div
             key={laundromat.id}
-            ref={el => {
-              if (refs[laundromat.id]) {
-                (refs[laundromat.id] as any).current = el;
-              }
-            }}
+            ref={refs[laundromat.id]}
             className={`transition-colors duration-300 ${
               selectedLaundromat === laundromat.id ? 'border-2 border-[#0EA5E9] rounded-lg' : ''
             }`}
