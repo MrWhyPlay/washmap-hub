@@ -113,6 +113,15 @@ const LaundromatMarkers = ({ map, laundromats, onMarkersLoaded, onMarkerClick, s
           const laundromatId = feature.get('id');
           if (laundromatId) {
             onMarkerClick(laundromatId);
+            const geometry = feature.getGeometry();
+            if (geometry && geometry instanceof Point) {
+              const coordinates = geometry.getCoordinates();
+              map.getView().animate({
+                center: coordinates,
+                duration: 1000,
+                zoom: 15
+              });
+            }
           }
         }
       });
