@@ -1,25 +1,15 @@
 import React, { useState, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import LaundryMap from '../components/LaundryMap';
-import LaundryCard from '../components/LaundryCard';
-import { Checkbox } from '../components/ui/checkbox';
-import { Label } from '../components/ui/label';
-import { Button } from '../components/ui/button';
+import LaundryFilters from '../components/LaundryFilters';
+import LaundryList from '../components/LaundryList';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
-import { RotateCcw } from 'lucide-react';
 
 interface Filters {
   hasContactlessPayment: boolean;
   loadSizes: string[];
 }
-
-const loadSizeLabels = {
-  'S': 'S',
-  'M': 'M',
-  'L': 'L',
-  'XL': 'XL'
-};
 
 const Index = () => {
   const { toast } = useToast();
@@ -61,15 +51,6 @@ const Index = () => {
     },
   });
 
-  const handleLoadSizeChange = (size: string) => {
-    setFilters(prev => ({
-      ...prev,
-      loadSizes: prev.loadSizes.includes(size)
-        ? prev.loadSizes.filter(s => s !== size)
-        : [...prev.loadSizes, size]
-    }));
-  };
-
   const handleMarkerClick = (id: number) => {
     setSelectedLaundromat(id);
     const element = laundromatRefs.current[id];
@@ -106,50 +87,11 @@ const Index = () => {
           </p>
         </header>
 
-        <div className="glass-card p-6 mb-8 rounded-lg animate-fade-in">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Filtres</h2>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleReset}
-              className="flex items-center gap-2"
-            >
-              <RotateCcw className="w-4 h-4" />
-              Reset
-            </Button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="contactless" 
-                  checked={filters.hasContactlessPayment}
-                  onCheckedChange={(checked) => 
-                    setFilters(prev => ({ ...prev, hasContactlessPayment: checked as boolean }))
-                  }
-                />
-                <Label htmlFor="contactless">Paiement sans contact</Label>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Tailles de charge</Label>
-              <div className="grid grid-cols-2 gap-2">
-                {Object.entries(loadSizeLabels).map(([size, label]) => (
-                  <div key={size} className="flex items-center space-x-2">
-                    <Checkbox 
-                      id={`size-${size}`}
-                      checked={filters.loadSizes.includes(size)}
-                      onCheckedChange={() => handleLoadSizeChange(size)}
-                    />
-                    <Label htmlFor={`size-${size}`}>{label}</Label>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+        <LaundryFilters 
+          filters={filters}
+          onFilterChange={setFilters}
+          onReset={handleReset}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           <LaundryMap 
@@ -157,41 +99,25 @@ const Index = () => {
             onMarkerClick={handleMarkerClick}
             selectedLaundromat={selectedLaundromat}
           />
-          <div className="h-[60vh] overflow-y-auto pr-4 space-y-6">
-            {isLoading ? (
-              <div className="text-center py-8">Chargement des laveries...</div>
-            ) : error ? (
-              <div className="text-center py-8 text-red-500">Erreur lors du chargement des laveries</div>
-            ) : laundromats && laundromats.length > 0 ? (
-              laundromats.map((laundromat) => (
-                <div
-                  key={laundromat.id}
-                  ref={el => laundromatRefs.current[laundromat.id] = el}
-                  className={`transition-colors duration-300 ${
-                    selectedLaundromat === laundromat.id ? 'border-2 border-[#0EA5E9] rounded-lg' : ''
-                  }`}
-                >
-                  <LaundryCard 
-                    {...laundromat} 
-                    isSelected={selectedLaundromat === laundromat.id}
-                    onSelect={handleLaundromatSelect}
-                  />
-                </div>
-              ))
-            ) : (
-              <div className="text-center py-8">Aucune laverie trouvée</div>
-            )}
-          </div>
+          <LaundryList
+            laundromats={laundromats || []}
+            isLoading={isLoading}
+            error={error as Error}
+            selectedLaundromat={selectedLaundromat}
+            onSelect={handleLaundromatSelect}
+            refs={laundromatRefs}
+          />
         </div>
 
         <div className="text-center mb-12">
-          <Button 
-            variant="outline"
-            className="bg-white hover:bg-gray-50"
-            onClick={() => window.open('https://forms.gle/vY4GcoT7XyM32rQ76', '_blank')}
+          <a 
+            href="https://forms.gle/vY4GcoT7XyM32rQ76" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             Rajouter une laverie manquante
-          </Button>
+          </a>
         </div>
       </div>
     </div>
