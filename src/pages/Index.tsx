@@ -4,10 +4,8 @@ import LaundryMap from '../components/LaundryMap';
 import LaundryCard from '../components/LaundryCard';
 import { Checkbox } from '../components/ui/checkbox';
 import { Label } from '../components/ui/label';
-import { Button } from '../components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
-import { RotateCcw } from 'lucide-react';
 
 interface Filters {
   hasContactlessPayment: boolean;
@@ -75,16 +73,22 @@ const Index = () => {
     setSelectedLaundromat(id);
   };
 
-  const handleReset = () => {
-    setFilters({
-      hasContactlessPayment: false,
-      loadSizes: []
-    });
-    setSelectedLaundromat(null);
+  const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Only reset if clicking directly on the background (not on children elements)
+    if (e.target === e.currentTarget) {
+      setFilters({
+        hasContactlessPayment: false,
+        loadSizes: []
+      });
+      setSelectedLaundromat(null);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-6">
+    <div 
+      className="min-h-screen bg-gradient-to-b from-gray-50 to-white p-6" 
+      onClick={handleBackgroundClick}
+    >
       <div className="max-w-7xl mx-auto">
         <header className="text-center mb-12 animate-fade-in">
           <div className="mb-4">
@@ -102,15 +106,6 @@ const Index = () => {
         <div className="glass-card p-6 mb-8 rounded-lg animate-fade-in">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">Filtres</h2>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleReset}
-              className="flex items-center gap-2"
-            >
-              <RotateCcw className="w-4 h-4" />
-              Reset
-            </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
@@ -178,13 +173,14 @@ const Index = () => {
         </div>
 
         <div className="text-center mb-12">
-          <Button 
-            variant="outline"
-            className="bg-white hover:bg-gray-50"
-            onClick={() => window.open('https://forms.gle/vY4GcoT7XyM32rQ76', '_blank')}
+          <a 
+            href="https://forms.gle/vY4GcoT7XyM32rQ76" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-block px-4 py-2 bg-white hover:bg-gray-50 border border-gray-200 rounded-md text-gray-700 transition-colors"
           >
             Rajouter une laverie manquante
-          </Button>
+          </a>
         </div>
       </div>
     </div>
