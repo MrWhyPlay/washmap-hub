@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, MapPin, Package, CreditCard } from 'lucide-react';
+import { Clock, MapPin, Package, CreditCard, Camera, Droplets } from 'lucide-react';
 
 interface LaundryCardProps {
   id: number;
@@ -33,6 +33,11 @@ const LaundryCard = ({
   isSelected,
   onSelect
 }: LaundryCardProps) => {
+  const formatPrice = (price: number | null) => {
+    if (price === null) return '-';
+    return `${price.toFixed(2)}€`;
+  };
+
   return (
     <div className="glass-card rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl animate-fade-in">
       <div className="p-6">
@@ -63,27 +68,38 @@ const LaundryCard = ({
               <CreditCard className="w-4 h-4 mr-2" />
               <span>{contactless_payment ? 'Sans contact' : 'Paiement classique'}</span>
             </div>
+
+            <div className="flex items-center text-sm text-gray-600">
+              <Droplets className="w-4 h-4 mr-2" />
+              <span>Lessive: {detergent_price ? `${detergent_price.toFixed(2)}€` : 'Inclus'}</span>
+            </div>
           </div>
 
           <div>
             <table className="w-full text-sm">
               <thead>
                 <tr>
-                  <th className="text-center py-1">S</th>
-                  <th className="text-center py-1">M</th>
-                  <th className="text-center py-1">L</th>
-                  <th className="text-center py-1">XL</th>
-                  <th className="text-center py-1">Lessive</th>
+                  <th className="text-left py-1">Taille</th>
+                  <th className="text-right py-1">Prix</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="text-center py-1">{price_s}€</td>
-                  <td className="text-center py-1">{price_m}€</td>
-                  <td className="text-center py-1">{price_l}€</td>
-                  <td className="text-center py-1">{price_xl}€</td>
-                  <td className="text-center py-1">{detergent_price}€</td>
-                </tr>
+                {load_sizes.map((size) => (
+                  <tr key={size}>
+                    <td className="py-1">
+                      {size === 'S' && '5 - 6,5 kg'}
+                      {size === 'M' && '7 - 10 kg'}
+                      {size === 'L' && '11 - 13 kg'}
+                      {size === 'XL' && '16 - 18 kg'}
+                    </td>
+                    <td className="text-right py-1">
+                      {size === 'S' && formatPrice(price_s)}
+                      {size === 'M' && formatPrice(price_m)}
+                      {size === 'L' && formatPrice(price_l)}
+                      {size === 'XL' && formatPrice(price_xl)}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

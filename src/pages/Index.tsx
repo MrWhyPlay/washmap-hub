@@ -15,11 +15,13 @@ interface Filters {
 }
 
 const loadSizeLabels = {
-  'S': 'S (5 - 6,5 kg)',
-  'M': 'M (7 - 10 kg)',
-  'L': 'L (11 - 13 kg)',
-  'XL': 'XL (16 - 18 kg)'
+  'S': '5 - 6,5 kg',
+  'M': '7 - 10 kg',
+  'L': '11 - 13 kg',
+  'XL': '16 - 18 kg'
 };
+
+// ... keep existing code (Index component definition and state)
 
 const Index = () => {
   const { toast } = useToast();
@@ -193,7 +195,6 @@ const Index = () => {
             Rajouter une laverie manquante
           </Button>
         </div>
-
       </div>
     </div>
   );
