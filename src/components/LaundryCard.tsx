@@ -14,6 +14,8 @@ interface LaundryCardProps {
   price_l: number | null;
   price_xl: number | null;
   detergent_price: number | null;
+  isSelected?: boolean;
+  onSelect?: (id: number) => void;
 }
 
 const LaundryCard = ({ 
@@ -27,17 +29,25 @@ const LaundryCard = ({
   price_m,
   price_l,
   price_xl,
-  detergent_price
+  detergent_price,
+  isSelected,
+  onSelect
 }: LaundryCardProps) => {
   return (
     <div className="glass-card rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl animate-fade-in">
       <div className="p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold">{name}</h3>
+          <h3 
+            className={`text-lg font-semibold cursor-pointer hover:text-blue-500 transition-colors ${
+              isSelected ? 'text-blue-500' : ''
+            }`}
+            onClick={() => onSelect?.(id)}
+          >
+            {name}
+          </h3>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Left column: Info */}
           <div className="space-y-3">
             <div className="flex items-center text-sm text-gray-600">
               <MapPin className="w-4 h-4 mr-2" />
@@ -55,7 +65,6 @@ const LaundryCard = ({
             </div>
           </div>
 
-          {/* Right column: Prices Table */}
           <div>
             <table className="w-full text-sm">
               <thead>

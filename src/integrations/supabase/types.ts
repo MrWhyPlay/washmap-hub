@@ -15,7 +15,6 @@ export type Database = {
           contactless_payment: boolean
           created_at: string
           detergent_price: number | null
-          distance: string | null
           id: number
           load_sizes: string[]
           name: string
@@ -24,7 +23,6 @@ export type Database = {
           price_m: number | null
           price_s: number | null
           price_xl: number | null
-          rating: number
           updated_at: string
         }
         Insert: {
@@ -32,7 +30,6 @@ export type Database = {
           contactless_payment?: boolean
           created_at?: string
           detergent_price?: number | null
-          distance?: string | null
           id?: number
           load_sizes?: string[]
           name: string
@@ -41,7 +38,6 @@ export type Database = {
           price_m?: number | null
           price_s?: number | null
           price_xl?: number | null
-          rating: number
           updated_at?: string
         }
         Update: {
@@ -49,7 +45,6 @@ export type Database = {
           contactless_payment?: boolean
           created_at?: string
           detergent_price?: number | null
-          distance?: string | null
           id?: number
           load_sizes?: string[]
           name?: string
@@ -58,7 +53,6 @@ export type Database = {
           price_m?: number | null
           price_s?: number | null
           price_xl?: number | null
-          rating?: number
           updated_at?: string
         }
         Relationships: []

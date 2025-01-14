@@ -71,6 +71,10 @@ const Index = () => {
     }
   };
 
+  const handleLaundromatSelect = (id: number) => {
+    setSelectedLaundromat(id);
+  };
+
   const handleReset = () => {
     setFilters({
       hasContactlessPayment: false,
@@ -144,6 +148,7 @@ const Index = () => {
           <LaundryMap 
             laundromats={laundromats || []} 
             onMarkerClick={handleMarkerClick}
+            selectedLaundromat={selectedLaundromat}
           />
           <div className="space-y-6">
             {isLoading ? (
@@ -159,7 +164,11 @@ const Index = () => {
                     selectedLaundromat === laundromat.id ? 'border-2 border-[#0EA5E9] rounded-lg' : ''
                   }`}
                 >
-                  <LaundryCard {...laundromat} />
+                  <LaundryCard 
+                    {...laundromat} 
+                    isSelected={selectedLaundromat === laundromat.id}
+                    onSelect={handleLaundromatSelect}
+                  />
                 </div>
               ))
             ) : (

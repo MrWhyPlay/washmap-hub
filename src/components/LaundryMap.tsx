@@ -15,9 +15,10 @@ interface LaundryMapProps {
     address: string;
   }>;
   onMarkerClick?: (id: number) => void;
+  selectedLaundromat?: number | null;
 }
 
-const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
+const LaundryMap = ({ laundromats, onMarkerClick, selectedLaundromat }: LaundryMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<Map | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -83,6 +84,7 @@ const LaundryMap = ({ laundromats, onMarkerClick }: LaundryMapProps) => {
             laundromats={laundromats}
             onMarkersLoaded={handleMarkersLoaded}
             onMarkerClick={onMarkerClick}
+            selectedLaundromat={selectedLaundromat}
           />
         </>
       )}
