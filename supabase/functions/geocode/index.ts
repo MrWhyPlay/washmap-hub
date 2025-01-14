@@ -15,16 +15,8 @@ serve(async (req) => {
     const { address } = await req.json()
     
     if (!address) {
-      return new Response(
-        JSON.stringify({ error: 'Address is required' }),
-        { 
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      )
+      throw new Error('Address is required')
     }
-
-    console.log('Geocoding address:', address)
 
     // Use OpenStreetMap Nominatim API for geocoding
     const encodedAddress = encodeURIComponent(address)
@@ -37,22 +29,10 @@ serve(async (req) => {
       }
     )
 
-    if (!response.ok) {
-      console.error('Nominatim API error:', await response.text())
-      throw new Error('Failed to geocode address')
-    }
-
     const data = await response.json()
-    console.log('Geocoding response:', data)
     
     if (!data || data.length === 0) {
-      return new Response(
-        JSON.stringify({ error: 'Address not found' }),
-        { 
-          status: 404,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      )
+      throw new Error('Address not found')
     }
 
     return new Response(
@@ -65,14 +45,10 @@ serve(async (req) => {
       }
     )
   } catch (error) {
-    console.error('Geocoding error:', error)
     return new Response(
-      JSON.stringify({ 
-        error: 'Geocoding failed',
-        details: error.message 
-      }),
+      JSON.stringify({ error: error.message }),
       { 
-        status: 500,
+        status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       }
     )

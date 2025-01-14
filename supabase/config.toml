@@ -1,5 +1,9 @@
 project_id = "xwupuyulqmuqouegtiak"
 
+[api]
+enabled = true
+url = "https://xwupuyulqmuqouegtiak.supabase.co"
+
 [functions]
 [functions.geocode]
 verify_jwt = false
