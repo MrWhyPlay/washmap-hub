@@ -5,7 +5,7 @@ interface LaundryCardProps {
   id: number;
   name: string;
   address: string;
-  rating: number;
+  rating?: number;
   opening_hours: string;
   load_sizes: string[];
   contactless_payment: boolean;

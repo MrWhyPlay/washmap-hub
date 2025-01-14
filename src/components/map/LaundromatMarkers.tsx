@@ -85,7 +85,7 @@ const LaundromatMarkers = ({ map, laundromats, onMarkersLoaded, onMarkerClick, s
 
       if (selectedFeature) {
         const geometry = selectedFeature.getGeometry();
-        if (geometry) {
+        if (geometry && geometry instanceof Point) {
           const coordinates = geometry.getCoordinates();
           map.getView().animate({
             center: coordinates,
