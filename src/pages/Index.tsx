@@ -14,11 +14,13 @@ interface Filters {
 const Index = () => {
   const { toast } = useToast();
   const [selectedLaundromat, setSelectedLaundromat] = useState<number | null>(null);
-  const laundromatRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const [filters, setFilters] = useState<Filters>({
     hasContactlessPayment: false,
     loadSizes: []
   });
+
+  // Create a record of refs for each laundromat
+  const refs: { [key: number]: React.RefObject<HTMLDivElement> } = {};
 
   const { data: laundromats, isLoading, error } = useQuery({
     queryKey: ['laundromats', filters],
@@ -47,13 +49,18 @@ const Index = () => {
         throw error;
       }
 
+      // Initialize refs for each laundromat
+      data?.forEach(laundromat => {
+        refs[laundromat.id] = React.createRef<HTMLDivElement>();
+      });
+
       return data;
     },
   });
 
   const handleMarkerClick = (id: number) => {
     setSelectedLaundromat(id);
-    const element = laundromatRefs.current[id];
+    const element = refs[id]?.current;
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
@@ -105,7 +112,7 @@ const Index = () => {
             error={error as Error}
             selectedLaundromat={selectedLaundromat}
             onSelect={handleLaundromatSelect}
-            refs={laundromatRefs}
+            refs={refs}
           />
         </div>
 
