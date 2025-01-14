@@ -18,10 +18,10 @@ interface FiltersProps {
 }
 
 const loadSizeLabels: LoadSizeLabels = {
-  'S': 'S',
-  'M': 'M',
-  'L': 'L',
-  'XL': 'XL'
+  'S': 'S (5 - 6,5kg)',
+  'M': 'M (7 - 10kg)',
+  'L': 'L (11 - 13 kg)',
+  'XL': 'XL (16 - 18 kg)'
 };
 
 const LaundryFilters = ({ filters, onFilterChange, onReset }: FiltersProps) => {
