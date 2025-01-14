@@ -21,8 +21,6 @@ const loadSizeLabels = {
   'XL': 'XL'
 };
 
-// ... keep existing code (Index component definition and state)
-
 const Index = () => {
   const { toast } = useToast();
   const [selectedLaundromat, setSelectedLaundromat] = useState<number | null>(null);
@@ -159,7 +157,7 @@ const Index = () => {
             onMarkerClick={handleMarkerClick}
             selectedLaundromat={selectedLaundromat}
           />
-          <div className="space-y-6">
+          <div className="h-[60vh] overflow-y-auto pr-4 space-y-6">
             {isLoading ? (
               <div className="text-center py-8">Chargement des laveries...</div>
             ) : error ? (
