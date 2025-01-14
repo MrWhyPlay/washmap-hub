@@ -33,7 +33,7 @@ const LaundryList = ({
   refs 
 }: LaundryListProps) => {
   return (
-    <div className="h-[60vh] overflow-y-auto pr-4 space-y-6 border border-gray-200 rounded-lg bg-white p-4">
+    <div className="h-[60vh] overflow-y-auto pr-4 space-y-6">
       {isLoading ? (
         <div className="text-center py-8">Chargement des laveries...</div>
       ) : error ? (
@@ -42,7 +42,11 @@ const LaundryList = ({
         laundromats.map((laundromat) => (
           <div
             key={laundromat.id}
-            ref={refs[laundromat.id]}
+            ref={el => {
+              if (refs[laundromat.id]) {
+                (refs[laundromat.id] as any).current = el;
+              }
+            }}
             className={`transition-colors duration-300 ${
               selectedLaundromat === laundromat.id ? 'border-2 border-[#0EA5E9] rounded-lg' : ''
             }`}
