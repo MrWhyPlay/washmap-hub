@@ -86,12 +86,7 @@ const LaundryCard = ({
               <tbody>
                 {load_sizes.map((size) => (
                   <tr key={size}>
-                    <td className="py-1">
-                      {size === 'S' && '5 - 6,5 kg'}
-                      {size === 'M' && '7 - 10 kg'}
-                      {size === 'L' && '11 - 13 kg'}
-                      {size === 'XL' && '16 - 18 kg'}
-                    </td>
+                    <td className="py-1">{size}</td>
                     <td className="text-right py-1">
                       {size === 'S' && formatPrice(price_s)}
                       {size === 'M' && formatPrice(price_m)}
