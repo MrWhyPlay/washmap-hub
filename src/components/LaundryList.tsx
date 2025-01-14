@@ -33,7 +33,7 @@ const LaundryList = ({
   refs 
 }: LaundryListProps) => {
   return (
-    <div className="h-[60vh] overflow-y-auto pr-4 space-y-6">
+    <div className="h-[60vh] overflow-y-auto pr-4 space-y-6 shadow-lg rounded-lg bg-white p-4">
       {isLoading ? (
         <div className="text-center py-8">Chargement des laveries...</div>
       ) : error ? (
