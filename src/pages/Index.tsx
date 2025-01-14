@@ -14,6 +14,13 @@ interface Filters {
   loadSizes: string[];
 }
 
+const loadSizeLabels = {
+  'S': 'S (5 - 6,5 kg)',
+  'M': 'M (7 - 10 kg)',
+  'L': 'L (11 - 13 kg)',
+  'XL': 'XL (16 - 18 kg)'
+};
+
 const Index = () => {
   const { toast } = useToast();
   const [selectedLaundromat, setSelectedLaundromat] = useState<number | null>(null);
@@ -129,14 +136,14 @@ const Index = () => {
             <div className="space-y-2">
               <Label>Tailles de charge</Label>
               <div className="grid grid-cols-2 gap-2">
-                {['S', 'M', 'L', 'XL'].map((size) => (
+                {Object.entries(loadSizeLabels).map(([size, label]) => (
                   <div key={size} className="flex items-center space-x-2">
                     <Checkbox 
                       id={`size-${size}`}
                       checked={filters.loadSizes.includes(size)}
                       onCheckedChange={() => handleLoadSizeChange(size)}
                     />
-                    <Label htmlFor={`size-${size}`}>{size}</Label>
+                    <Label htmlFor={`size-${size}`}>{label}</Label>
                   </div>
                 ))}
               </div>
@@ -186,6 +193,7 @@ const Index = () => {
             Rajouter une laverie manquante
           </Button>
         </div>
+
       </div>
     </div>
   );
