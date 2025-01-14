@@ -45,7 +45,6 @@ serve(async (req) => {
       }
     )
   } catch (error) {
-    console.error('Geocoding error:', error);
     return new Response(
       JSON.stringify({ error: error.message }),
       { 
