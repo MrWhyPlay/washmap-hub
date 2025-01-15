@@ -15,10 +15,10 @@ interface Filters {
 }
 
 const loadSizeLabels = {
-  'S': 'S',
-  'M': 'M',
-  'L': 'L',
-  'XL': 'XL'
+  'S': 'S (5 - 6,5 kg)',
+  'M': 'M (7 - 10 kg)',
+  'L': 'L (11 - 13 kg)',
+  'XL': 'XL (16 - 18 kg)'
 };
 
 const Index = () => {
