@@ -1,31 +1,22 @@
 import React, { useState, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import LaundryMap from '../components/LaundryMap';
-import LaundryCard from '../components/LaundryCard';
-import { Checkbox } from '../components/ui/checkbox';
-import { Label } from '../components/ui/label';
 import { Button } from '../components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
-import { RotateCcw } from 'lucide-react';
+import { Filters } from '@/components/Filters';
+import { LaundryList } from '@/components/LaundryList';
 
-interface Filters {
+interface FiltersState {
   hasContactlessPayment: boolean;
   loadSizes: string[];
 }
-
-const loadSizeLabels = {
-  'S': 'S (5 - 6,5 kg)',
-  'M': 'M (7 - 10 kg)',
-  'L': 'L (11 - 13 kg)',
-  'XL': 'XL (16 - 18 kg)'
-};
 
 const Index = () => {
   const { toast } = useToast();
   const [selectedLaundromat, setSelectedLaundromat] = useState<number | null>(null);
   const laundromatRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
-  const [filters, setFilters] = useState<Filters>({
+  const [filters, setFilters] = useState<FiltersState>({
     hasContactlessPayment: false,
     loadSizes: []
   });
@@ -61,25 +52,12 @@ const Index = () => {
     },
   });
 
-  const handleLoadSizeChange = (size: string) => {
-    setFilters(prev => ({
-      ...prev,
-      loadSizes: prev.loadSizes.includes(size)
-        ? prev.loadSizes.filter(s => s !== size)
-        : [...prev.loadSizes, size]
-    }));
-  };
-
   const handleMarkerClick = (id: number) => {
     setSelectedLaundromat(id);
     const element = laundromatRefs.current[id];
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-  };
-
-  const handleLaundromatSelect = (id: number) => {
-    setSelectedLaundromat(id);
   };
 
   const handleReset = () => {
@@ -106,50 +84,11 @@ const Index = () => {
           </p>
         </header>
 
-        <div className="glass-card p-6 mb-8 rounded-lg animate-fade-in">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Filtres</h2>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleReset}
-              className="flex items-center gap-2"
-            >
-              <RotateCcw className="w-4 h-4" />
-              Reset
-            </Button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="contactless" 
-                  checked={filters.hasContactlessPayment}
-                  onCheckedChange={(checked) => 
-                    setFilters(prev => ({ ...prev, hasContactlessPayment: checked as boolean }))
-                  }
-                />
-                <Label htmlFor="contactless">Paiement sans contact</Label>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Tailles de charge</Label>
-              <div className="grid grid-cols-2 gap-2">
-                {Object.entries(loadSizeLabels).map(([size, label]) => (
-                  <div key={size} className="flex items-center space-x-2">
-                    <Checkbox 
-                      id={`size-${size}`}
-                      checked={filters.loadSizes.includes(size)}
-                      onCheckedChange={() => handleLoadSizeChange(size)}
-                    />
-                    <Label htmlFor={`size-${size}`}>{label}</Label>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+        <Filters 
+          filters={filters}
+          onFilterChange={setFilters}
+          onReset={handleReset}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           <LaundryMap 
@@ -157,31 +96,14 @@ const Index = () => {
             onMarkerClick={handleMarkerClick}
             selectedLaundromat={selectedLaundromat}
           />
-          <div className="h-[60vh] overflow-y-auto pr-4 space-y-6">
-            {isLoading ? (
-              <div className="text-center py-8">Chargement des laveries...</div>
-            ) : error ? (
-              <div className="text-center py-8 text-red-500">Erreur lors du chargement des laveries</div>
-            ) : laundromats && laundromats.length > 0 ? (
-              laundromats.map((laundromat) => (
-                <div
-                  key={laundromat.id}
-                  ref={el => laundromatRefs.current[laundromat.id] = el}
-                  className={`transition-colors duration-300 ${
-                    selectedLaundromat === laundromat.id ? 'border-2 border-[#0EA5E9] rounded-lg' : ''
-                  }`}
-                >
-                  <LaundryCard 
-                    {...laundromat} 
-                    isSelected={selectedLaundromat === laundromat.id}
-                    onSelect={handleLaundromatSelect}
-                  />
-                </div>
-              ))
-            ) : (
-              <div className="text-center py-8">Aucune laverie trouvée</div>
-            )}
-          </div>
+          <LaundryList 
+            laundromats={laundromats}
+            isLoading={isLoading}
+            error={error as Error}
+            selectedLaundromat={selectedLaundromat}
+            onLaundromatSelect={setSelectedLaundromat}
+            laundromatRefs={laundromatRefs}
+          />
         </div>
 
         <div className="text-center mb-12">
