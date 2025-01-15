@@ -71,7 +71,7 @@ const LaundryCard = ({
 
             <div className="flex items-center text-sm text-gray-600">
               <Droplets className="w-4 h-4 mr-2" />
-              <span><span className="font-bold">Lessive:</span> {detergent_price ? `${detergent_price.toFixed(2)}€` : 'Inclus'}</span>
+              <span>Lessive: {detergent_price ? `${detergent_price.toFixed(2)}€` : 'Inclus'}</span>
             </div>
           </div>
 
